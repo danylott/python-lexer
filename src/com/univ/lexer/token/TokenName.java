@@ -2,6 +2,7 @@ package com.univ.lexer.token;
 
 public enum TokenName {
     WHITESPACE,
+    NEW_LINE,
     INDENT,
     DEDENT,
     COMMENT,//#
