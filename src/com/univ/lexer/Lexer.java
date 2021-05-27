@@ -30,30 +30,18 @@ public class Lexer {
         BufferedReader reader = new BufferedReader(new FileReader(filepath));
         String line = reader.readLine();
         while (line != null) {
-            StringBuffer buffer = new StringBuffer(line);
-            String curLine = buffer.append(END_OF_LINE).toString();
+            String curLine = line;
             for (int i = 0; i < curLine.length(); ) {
                 boolean isMatched = false;
-                if (i == curLine.length() - 1) { // position at $ symbol
-                    // replace all last $ symbols to NEWLINE token
-                    tokens.add(new Token(TokenName.NEW_LINE, null, new Location(curLineNum, i)));
-                    break;
-                }
                 for (Pair patternPair : Patterns.patterns) {
                     if (patternPair.getFirst() instanceof String) {
                         Pattern p = Pattern.compile((String) patternPair.getFirst(), Pattern.CASE_INSENSITIVE);
                         Matcher matcher = p.matcher(curLine);
-                        if (matcher.find(i)) {
-                            String matchedText = null;
-                            if (patternPair.getSecond() != TokenName.NEW_LINE) {
-                                matchedText = curLine.substring(matcher.start(), matcher.end());
-                                if(matcher.end() == curLine.length()){
-                                    matchedText = matchedText.substring(matcher.start(),matcher.end() - 1);
-                                }
-                            }
+                        if (matcher.find(i) && matcher.start() == i) {
+                            String matchedText = curLine.substring(matcher.start(), matcher.end());
                             isMatched = true;
                             i = matcher.end() + 1;
-                            Location begin = new Location(curLineNum, matcher.start());
+                            Location begin = new Location(curLineNum, matcher.start() + 1);
                             tokens.add(new Token((TokenName) patternPair.getSecond(), matchedText, begin));
                             break;
                         }
@@ -61,24 +49,22 @@ public class Lexer {
                         Automate automaton = new Automate((StateMachine) patternPair.getFirst());
                         Pair<Integer, Integer> matchPos = automaton.match(curLine, i);
                         if (matchPos.getFirst() != null & matchPos.getSecond() != null) {
-                            String matchedText = null;
-                            if (patternPair.getSecond() != TokenName.NEW_LINE) {
-                                matchedText = curLine.substring(matchPos.getFirst(), matchPos.getSecond());
-                            }
+                            String matchedText = curLine.substring(matchPos.getFirst(), matchPos.getSecond());
                             i = matchPos.getSecond();
                             isMatched = true;
-                            Location begin = new Location(curLineNum, matchPos.getFirst());
+                            Location begin = new Location(curLineNum, matchPos.getFirst() + 1);
                             tokens.add(new Token((TokenName) patternPair.getSecond(), matchedText, begin));
                             break;
                         }
                     }
                 }
                 if (!isMatched) {
-                    Location location = new Location(1, 1);
+                    Location location = new Location(curLineNum, i+1);
                     tokens.add(new Token(TokenName.ERROR_TOKEN, String.valueOf(curLine.charAt(i)), location));
                     ++i;
                 }
             }
+            tokens.add(new Token(TokenName.NEW_LINE,null,new Location(curLineNum,line.length())));
             line = reader.readLine();
             curLineNum++;
         }

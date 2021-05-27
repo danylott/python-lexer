@@ -11,5 +11,6 @@ public class Patterns {
             new Pair(StateMachineFactory.comparisonOperatorStateMachine(), TokenName.COMPARISON_OPERATOR),
             new Pair(StateMachineFactory.separatorStateMachine(), TokenName.SEPARATOR),
             new Pair(StateMachineFactory.bracketStateMachine(), TokenName.BRACKET),
+            new Pair(StateMachineFactory.dotStateMachine(),TokenName.DOT),
     };
 }

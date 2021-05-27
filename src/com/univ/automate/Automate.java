@@ -1,4 +1,5 @@
 package com.univ.automate;
+
 import com.univ.helper.Pair;
 
 public class Automate {
@@ -10,8 +11,11 @@ public class Automate {
 
     public Pair<Integer, Integer> match(String text, int fromPos) {
         stateMachine.reset();
+        TransitionFunction transitionFunction = (c) -> {
+            return Character.isDigit(c);
+        };
         int curPos = fromPos;
-        while (stateMachine.switchState(text.charAt(curPos)) != null) {
+        while (curPos < text.length() && stateMachine.switchState(text.charAt(curPos)) != null) {
             curPos++;
         }
         if (stateMachine.canStop()) {

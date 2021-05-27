@@ -12,6 +12,16 @@ public class StateMachineFactory {
         State xor = new State(true);
         State line = new State(true);
         State eq = new State(true);
+        State tw_div = new State(true);// //
+        State wave = new State(true);// ~
+        State lt = new State(false);// <
+        State vlt = new State(true);// <<
+        State gt = new State(false);// >
+        State vgt = new State(true);// >>
+        State perc = new State(true);// %
+
+        lt.addTransition('<', vlt); //< to <<
+        gt.addTransition('>', vgt);// > to >>
 
         plus.addTransition('=', eq);
         minus.addTransition('=', eq);
@@ -21,8 +31,12 @@ public class StateMachineFactory {
         amp.addTransition('=', eq);
         xor.addTransition('=', eq);
         line.addTransition('=', eq);
-
         mult.addTransition('*', pow);
+        tw_div.addTransition('=', eq);
+        vlt.addTransition('=', eq);
+        vgt.addTransition('=', eq);
+        perc.addTransition('=', eq);
+        div.addTransition('/', tw_div);// / to //
 
         initial.addTransition('+', plus);
         initial.addTransition('-', minus);
@@ -32,14 +46,18 @@ public class StateMachineFactory {
         initial.addTransition('^', xor);
         initial.addTransition('|', line);
         initial.addTransition('=', eq);
+        initial.addTransition('~', wave);
+        initial.addTransition('<', lt);
+        initial.addTransition('>', gt);
+        initial.addTransition('%', perc);
 
         return new StateMachine(initial);
     }
 
-    public static StateMachine newLineStateMachine() {
+    public static StateMachine dotStateMachine() {
         State initial = new State(false);
-        State newLine = new State(true);
-        initial.addTransition('\n', newLine);
+        State dot = new State(true);
+        initial.addTransition('.', dot);
         return new StateMachine(initial);
     }
 
@@ -47,7 +65,7 @@ public class StateMachineFactory {
         State initial = new State(false);
         State lt = new State(true);
         State gt = new State(true);
-        State nt = new State(true);
+        State nt = new State(false);
         State eq = new State(false);
         State tw_eq = new State(true);
 
