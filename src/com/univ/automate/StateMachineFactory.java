@@ -20,36 +20,36 @@ public class StateMachineFactory {
         State vgt = new State(true);// >>
         State perc = new State(true);// %
 
-        lt.addTransition('<', vlt); //< to <<
-        gt.addTransition('>', vgt);// > to >>
+        lt.addTransition(new SymbolTransition('<', vlt)); //< to <<
+        gt.addTransition(new SymbolTransition('>', vgt));// > to >>
 
-        plus.addTransition('=', eq);
-        minus.addTransition('=', eq);
-        mult.addTransition('=', eq);
-        pow.addTransition('=', eq);
-        div.addTransition('=', eq);
-        amp.addTransition('=', eq);
-        xor.addTransition('=', eq);
-        line.addTransition('=', eq);
-        mult.addTransition('*', pow);
-        tw_div.addTransition('=', eq);
-        vlt.addTransition('=', eq);
-        vgt.addTransition('=', eq);
-        perc.addTransition('=', eq);
-        div.addTransition('/', tw_div);// / to //
+        plus.addTransition(new SymbolTransition('=', eq));
+        minus.addTransition(new SymbolTransition('=', eq));
+        mult.addTransition(new SymbolTransition('=', eq));
+        pow.addTransition(new SymbolTransition('=', eq));
+        div.addTransition(new SymbolTransition('=', eq));
+        amp.addTransition(new SymbolTransition('=', eq));
+        xor.addTransition(new SymbolTransition('=', eq));
+        line.addTransition(new SymbolTransition('=', eq));
+        mult.addTransition(new SymbolTransition('*', pow));
+        tw_div.addTransition(new SymbolTransition('=', eq));
+        vlt.addTransition(new SymbolTransition('=', eq));
+        vgt.addTransition(new SymbolTransition('=', eq));
+        perc.addTransition(new SymbolTransition('=', eq));
+        div.addTransition(new SymbolTransition('/', tw_div));// / to //
 
-        initial.addTransition('+', plus);
-        initial.addTransition('-', minus);
-        initial.addTransition('*', mult);
-        initial.addTransition('/', div);
-        initial.addTransition('&', amp);
-        initial.addTransition('^', xor);
-        initial.addTransition('|', line);
-        initial.addTransition('=', eq);
-        initial.addTransition('~', wave);
-        initial.addTransition('<', lt);
-        initial.addTransition('>', gt);
-        initial.addTransition('%', perc);
+        initial.addTransition(new SymbolTransition('+', plus));
+        initial.addTransition(new SymbolTransition('-', minus));
+        initial.addTransition(new SymbolTransition('*', mult));
+        initial.addTransition(new SymbolTransition('/', div));
+        initial.addTransition(new SymbolTransition('&', amp));
+        initial.addTransition(new SymbolTransition('^', xor));
+        initial.addTransition(new SymbolTransition('|', line));
+        initial.addTransition(new SymbolTransition('=', eq));
+        initial.addTransition(new SymbolTransition('~', wave));
+        initial.addTransition(new SymbolTransition('<', lt));
+        initial.addTransition(new SymbolTransition('>', gt));
+        initial.addTransition(new SymbolTransition('%', perc));
 
         return new StateMachine(initial);
     }
@@ -57,7 +57,7 @@ public class StateMachineFactory {
     public static StateMachine dotStateMachine() {
         State initial = new State(false);
         State dot = new State(true);
-        initial.addTransition('.', dot);
+        initial.addTransition(new SymbolTransition('.', dot));
         return new StateMachine(initial);
     }
 
@@ -66,18 +66,19 @@ public class StateMachineFactory {
         State lt = new State(true);
         State gt = new State(true);
         State nt = new State(false);
-        State eq = new State(false);
+        State eq = new State(true); // <=, >=, ==,!=
         State tw_eq = new State(true);
+        State eq2 = new State(false); // =
 
-        lt.addTransition('=', eq);
-        gt.addTransition('=', eq);
-        nt.addTransition('=', eq);
-        eq.addTransition('=', tw_eq);
+        lt.addTransition(new SymbolTransition('=', eq));
+        gt.addTransition(new SymbolTransition('=', eq));
+        nt.addTransition(new SymbolTransition('=', eq));
+        eq2.addTransition(new SymbolTransition('=', tw_eq));
 
-        initial.addTransition('<', lt);
-        initial.addTransition('>', gt);
-        initial.addTransition('!', nt);
-        initial.addTransition('=', eq);
+        initial.addTransition(new SymbolTransition('<', lt));
+        initial.addTransition(new SymbolTransition('>', gt));
+        initial.addTransition(new SymbolTransition('!', nt));
+        initial.addTransition(new SymbolTransition('=', eq2));
 
         return new StateMachine(initial);
     }
@@ -91,12 +92,12 @@ public class StateMachineFactory {
         State lsb = new State(true);
         State rsb = new State(true);
 
-        initial.addTransition('(', lb);
-        initial.addTransition(')', rb);
-        initial.addTransition('{', lfb);
-        initial.addTransition('}', rfb);
-        initial.addTransition('[', lsb);
-        initial.addTransition(']', rsb);
+        initial.addTransition(new SymbolTransition('(', lb));
+        initial.addTransition(new SymbolTransition(')', rb));
+        initial.addTransition(new SymbolTransition('{', lfb));
+        initial.addTransition(new SymbolTransition('}', rfb));
+        initial.addTransition(new SymbolTransition('[', lsb));
+        initial.addTransition(new SymbolTransition(']', rsb));
 
         return new StateMachine(initial);
     }
@@ -107,10 +108,19 @@ public class StateMachineFactory {
         State c = new State(true);
         State sem = new State(true);
 
-        initial.addTransition(':', tp);
-        initial.addTransition(',', c);
-        initial.addTransition(';', sem);
+        initial.addTransition(new SymbolTransition(':', tp));
+        initial.addTransition(new SymbolTransition(',', c));
+        initial.addTransition(new SymbolTransition(';', sem));
 
+        return new StateMachine(initial);
+    }
+
+    public static StateMachine numberStateMachine() {
+        State initial = new State(false);
+        State digit = new State(true);
+        TransitionFunction transitionFunction = Character::isDigit;
+        initial.addTransition(new FuncTransition(transitionFunction, digit));
+        digit.addTransition(new FuncTransition(transitionFunction, digit));
         return new StateMachine(initial);
     }
 }
