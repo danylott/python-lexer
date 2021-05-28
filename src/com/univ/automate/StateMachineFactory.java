@@ -124,13 +124,49 @@ public class StateMachineFactory {
         return new StateMachine(initial);
     }
 
-    public static StateMachine identifierStateMachine(){
+    public static StateMachine identifierStateMachine() {
         State initial = new State(false);
         State identifier = new State(true);
         TransitionFunction startNameTransition = (c) -> c == '_' || Character.isLetter(c);
         initial.addTransition(new FuncTransition(startNameTransition, identifier));
         TransitionFunction nameTransition = (c) -> c == '_' || Character.isLetter(c) || Character.isDigit(c);
         identifier.addTransition(new FuncTransition(nameTransition, identifier));
+        return new StateMachine(initial);
+    }
+
+    public static StateMachine doubleQuoteStringStateMachine() {
+        State initial = new State(false);
+        State simple = new State(false);
+        State end = new State(true);
+        State slash = new State(false);
+        TransitionFunction strSymbols = (c) -> c != '\"' && c != '\\';
+        TransitionFunction notSlash = (c) -> c != '\\';
+
+        simple.addTransition(new FuncTransition(strSymbols, simple));
+        simple.addTransition(new SymbolTransition('\\', slash));
+        slash.addTransition(new SymbolTransition('\\', slash));
+        slash.addTransition(new FuncTransition(notSlash, simple));
+        simple.addTransition(new SymbolTransition('\"', end)); // end string
+        initial.addTransition(new SymbolTransition('\"', simple)); // start string
+
+        return new StateMachine(initial);
+    }
+
+    public static StateMachine singleQuoteStringStateMachine() {
+        State initial = new State(false);
+        State simple = new State(false);
+        State end = new State(true);
+        State slash = new State(false);
+        TransitionFunction strSymbols = (c) -> c != '\'' && c != '\\';
+        TransitionFunction notSlash = (c) -> c != '\\';
+
+        simple.addTransition(new FuncTransition(strSymbols, simple));
+        simple.addTransition(new SymbolTransition('\\', slash));
+        slash.addTransition(new SymbolTransition('\\', slash));
+        slash.addTransition(new FuncTransition(notSlash, simple));
+        simple.addTransition(new SymbolTransition('\'', end)); // end string
+        initial.addTransition(new SymbolTransition('\'', simple)); // start string
+
         return new StateMachine(initial);
     }
 }

@@ -15,7 +15,7 @@ public enum TokenName {
     SEPARATOR, //, ; :
     BRACKET, // (, ), [, ], {, }
     DOT, // .
-    IDENTIFIER,
+    IDENTIFIER, // https://www.geeksforgeeks.org/python-keywords-and-identifiers/
     NUMBER,
     STRING,
     MULTILINE_STRING,
