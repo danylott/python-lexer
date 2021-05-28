@@ -123,4 +123,14 @@ public class StateMachineFactory {
         digit.addTransition(new FuncTransition(transitionFunction, digit));
         return new StateMachine(initial);
     }
+
+    public static StateMachine identifierStateMachine(){
+        State initial = new State(false);
+        State identifier = new State(true);
+        TransitionFunction startNameTransition = (c) -> c == '_' || Character.isLetter(c);
+        initial.addTransition(new FuncTransition(startNameTransition, identifier));
+        TransitionFunction nameTransition = (c) -> c == '_' || Character.isLetter(c) || Character.isDigit(c);
+        identifier.addTransition(new FuncTransition(nameTransition, identifier));
+        return new StateMachine(initial);
+    }
 }

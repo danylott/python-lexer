@@ -10,3 +10,6 @@ b**=6
 c = [(a,b),{a:b}]
 
 b=3*7.512
+## data types
+k=float(a)
+intstr=str(b)
