@@ -178,4 +178,11 @@ public class StateMachineFactory {
         initial.addTransition(new FuncTransition(funcTransition, whiteSpace));
         return new StateMachine(initial);
     }
+
+    public static StateMachine newLineStateMachine() {
+        State initial = new State(false);
+        State newLine = new State(true);
+        initial.addTransition(new SymbolTransition('\n', newLine));
+        return new StateMachine(initial);
+    }
 }

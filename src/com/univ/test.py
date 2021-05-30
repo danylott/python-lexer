@@ -32,6 +32,8 @@ msg = 'hello\" friend'
 msg = "hello 'dear' friend"
 
 msg = 'hel'lo worl'd'
+msg = 'hello\
+'
 
 """
 asdfrqwerzxcv
@@ -42,4 +44,10 @@ asdfqwer
 asdfrqwerzxcv
 asdfqwer
 \"""
+
+"""
+asdf
+\"""
+
+var = 3
 

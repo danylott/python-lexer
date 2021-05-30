@@ -19,7 +19,8 @@ public enum TokenName {
     NUMBER,
     STRING,
     MULTILINE_STRING,
-    ERROR_TOKEN
+    ERROR_TOKEN,
+    NOT_ENDED_MULTILINE_STRING_ERROR
 }
 
 // check all here: https://www.w3schools.com/python/python_operators.asp

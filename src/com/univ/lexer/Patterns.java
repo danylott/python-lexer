@@ -5,6 +5,10 @@ import com.univ.automate.StateMachineFactory;
 import com.univ.helper.Pair;
 import com.univ.lexer.token.TokenName;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class Patterns {
     public static final Pair[] patterns = new Pair[]{
             new Pair(new MultilineAutomate(), TokenName.MULTILINE_STRING),
@@ -19,13 +23,24 @@ public class Patterns {
             new Pair(StateMachineFactory.identifierStateMachine(), TokenName.IDENTIFIER),
             new Pair(StateMachineFactory.doubleQuoteStringStateMachine(), TokenName.STRING),
             new Pair(StateMachineFactory.singleQuoteStringStateMachine(), TokenName.STRING),
+            new Pair(StateMachineFactory.newLineStateMachine(), TokenName.NEW_LINE),
     };
     // https://+www.geeksforgeeks.org/python-keywords-and-identifiers/
-    public static final String[] keywords = {"import", "as", "class", "def", "pass", "if", "elif", "else", "try", "except", "throw",
+    public static final String[] KEYWORDS_VALUES = {"import", "as", "class", "def", "pass", "if", "elif", "else", "try", "except", "throw",
             "for", "while", "in", "is", "await", "None", "raise", "True", "False", "return", "and", "or", "lambda", "break", "continue", "from",
             "assert", "with", "not", "async", "yield", "global", "del"};
 
-    public static final String[] dataTypes = {"int", "str", "bool", "float", "complex"};
+    private static final String[] DATA_TYPE_VALUES = {"int","str","bool","float","complex"};
 
-    public static final char[] whitespaces = {'\t',' ', '\f'};
+    private static final Set<String> KEYWORDS = new HashSet<>(Arrays.asList(KEYWORDS_VALUES));
+
+    private static final Set<String> DATA_TYPES = new HashSet<>(Arrays.asList(DATA_TYPE_VALUES));
+
+    public static boolean isKeyword(String identifier){
+        return KEYWORDS.contains(identifier);
+    }
+
+    public static boolean isDataType(String identifier){
+        return DATA_TYPES.contains(identifier);
+    }
 }
