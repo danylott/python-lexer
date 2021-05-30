@@ -169,4 +169,13 @@ public class StateMachineFactory {
 
         return new StateMachine(initial);
     }
+
+    public static StateMachine whitespaceStateMachine() {
+        State initial = new State(false);
+        State whiteSpace = new State(true);
+        TransitionFunction funcTransition = (c) -> c == ' ' || c == '\t';
+        whiteSpace.addTransition(new FuncTransition(funcTransition, whiteSpace));
+        initial.addTransition(new FuncTransition(funcTransition, whiteSpace));
+        return new StateMachine(initial);
+    }
 }

@@ -1,11 +1,14 @@
 package com.univ.lexer;
 
+import com.univ.automate.MultilineAutomate;
 import com.univ.automate.StateMachineFactory;
 import com.univ.helper.Pair;
 import com.univ.lexer.token.TokenName;
 
 public class Patterns {
     public static final Pair[] patterns = new Pair[]{
+            new Pair(new MultilineAutomate(), TokenName.MULTILINE_STRING),
+            new Pair(StateMachineFactory.whitespaceStateMachine(), TokenName.WHITESPACE),
             new Pair("#.*(\\r|\\n|\\r\\n|$)", TokenName.COMMENT),
             new Pair(StateMachineFactory.comparisonOperatorStateMachine(), TokenName.COMPARISON_OPERATOR),
             new Pair(StateMachineFactory.operatorStateMachine(), TokenName.OPERATOR),
@@ -23,4 +26,6 @@ public class Patterns {
             "assert", "with", "not", "async", "yield", "global", "del"};
 
     public static final String[] dataTypes = {"int", "str", "bool", "float", "complex"};
+
+    public static final char[] whitespaces = {'\t',' ', '\f'};
 }

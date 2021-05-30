@@ -2,6 +2,7 @@ package com.univ.lexer;
 
 import com.univ.automate.Automate;
 import com.univ.automate.StateMachine;
+import com.univ.automate.MultilineAutomate;
 import com.univ.helper.Pair;
 import com.univ.lexer.token.Location;
 import com.univ.lexer.token.Token;
@@ -46,23 +47,37 @@ public class Lexer {
                             tokens.add(new Token((TokenName) patternPair.getSecond(), matchedText, begin));
                             break;
                         }
+                    } else if (patternPair.getFirst() instanceof MultilineAutomate) {
+                        MultilineAutomate multilineAutomate = (MultilineAutomate) patternPair.getFirst();
+                        Pair<Integer, Integer> matchPos = multilineAutomate.match(curLine, i);
+                        if (matchPos.getFirst() != null) {
+                            tokens.add(new Token(TokenName.MULTILINE_STRING, "MS",
+                                    new Location(matchPos.getFirst(), matchPos.getSecond())));
+                            isMatched = true;
+                            i = curLine.length();
+                            break;
+                        } else if (multilineAutomate.started()) {
+                            isMatched = true;
+                            i = curLine.length();
+                            break;
+                        }
                     } else {
-                        Automate automaton = new Automate((StateMachine) patternPair.getFirst());
-                        Pair<Integer, Integer> matchPos = automaton.match(curLine, i);
+                        Automate automate = new Automate((StateMachine) patternPair.getFirst());
+                        Pair<Integer, Integer> matchPos = automate.match(curLine, i);
                         if (matchPos.getFirst() != null & matchPos.getSecond() != null) {
                             String matchedText = curLine.substring(matchPos.getFirst(), matchPos.getSecond());
                             i = matchPos.getSecond();
                             isMatched = true;
                             Location begin = new Location(curLineNum, matchPos.getFirst() + 1);
-                            if(patternPair.getSecond() == TokenName.IDENTIFIER) {
+                            if (patternPair.getSecond() == TokenName.IDENTIFIER) {
                                 if (findTextInArray(Patterns.keywords, matchedText)) {
                                     tokens.add(new Token(TokenName.KEYWORD, matchedText, begin));
-                                } else if (findTextInArray(Patterns.dataTypes, matchedText)){
+                                } else if (findTextInArray(Patterns.dataTypes, matchedText)) {
                                     tokens.add(new Token(TokenName.DATA_TYPE, matchedText, begin));
-                                }else{
+                                } else {
                                     tokens.add(new Token(TokenName.IDENTIFIER, matchedText, begin));
                                 }
-                            }else {
+                            } else {
                                 tokens.add(new Token((TokenName) patternPair.getSecond(), matchedText, begin));
                             }
                             break;
@@ -75,16 +90,21 @@ public class Lexer {
                     ++i;
                 }
             }
-            tokens.add(new Token(TokenName.NEW_LINE, null, new Location(curLineNum, line.length() + 1)));
+            // tokens.add(new Token(TokenName.NEW_LINE, null, new Location(curLineNum, line.length() + 1)));
             line = reader.readLine();
             curLineNum++;
         }
+
+        if (((MultilineAutomate) Patterns.patterns[0].getFirst()).started()) {
+            tokens.add(new Token(TokenName.ERROR_TOKEN, null, new Location(0, 0)));
+        }
+
         reader.close();
 
         return tokens;
     }
 
-    private boolean findTextInArray(String[]array,String text){
+    private boolean findTextInArray(String[] array, String text) {
         return Arrays.asList(array).contains(text);
     }
 }

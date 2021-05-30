@@ -31,3 +31,15 @@ msg = 'hello "dear" friend'
 msg = 'hello\" friend'
 msg = "hello 'dear' friend"
 
+msg = 'hel'lo worl'd'
+
+"""
+asdfrqwerzxcv
+asdfqwer
+"""
+
+"""
+asdfrqwerzxcv
+asdfqwer
+\"""
+

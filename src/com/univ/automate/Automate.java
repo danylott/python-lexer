@@ -11,9 +11,6 @@ public class Automate {
 
     public Pair<Integer, Integer> match(String text, int fromPos) {
         stateMachine.reset();
-        TransitionFunction transitionFunction = (c) -> {
-            return Character.isDigit(c);
-        };
         int curPos = fromPos;
         while (curPos < text.length() && stateMachine.switchState(text.charAt(curPos)) != null) {
             curPos++;
