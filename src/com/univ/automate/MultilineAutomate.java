@@ -47,7 +47,7 @@ public class MultilineAutomate {
         if (startedNow) {
             state = nextState;
             startPos = fromPos;
-            return new Pair<>(null, null);
+            return new Pair<>(startPos, null);
         }
         if (state == 1) {
             do {

@@ -1,6 +1,6 @@
-import numpy
-# comment $ asdf
-a = 3+2
+    import numpy
+        # comment $ asdf
+        a = 3+2
 # comment
 b = 3+3
 b = 1-2
@@ -22,7 +22,6 @@ class myClass:
 for i in range(0,5):
     while True:
         print(i)
-#
 
 msg = "hello friend"
 msg = 'hello friend'
@@ -40,14 +39,12 @@ asdfrqwerzxcv
 asdfqwer
 """
 
+var = 3
+
 """
 asdfrqwerzxcv
 asdfqwer
 \"""
 
-"""
-asdf
-\"""
-
-var = 3
-
+# after error won't be parsed
+a = 3
